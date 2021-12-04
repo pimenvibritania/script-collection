@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7.22
+    restart: unless-stopped
+    tty: true
+    environment:
+      # MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'root'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'root'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3308:3306'
+    # expose:
+    #   # Opens port 3306 on the container
+    #   - '3308'
+      # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      # args:
+          # Available [trace|debug|profile]. Use Comma separated available values for multiple mode
+          # Use "off" to disable xdebug
+          # - XDEBUG_MODES=debug,trace
+          # - XDEBUG_MODES=off
+          # Set the following values to overwrite the existing settings.
+          # Uncomment the following line and change value.
+          # - REMOTE_HOST=docker.for.mac.host.internal # Host machine IP
+          # - REMOTE_PORT=9003 # IDE/Editor's listener port
+          # - IDE_KEY=docker # IDE's filter/listener key
+    container_name: DOO-api
+    restart: always
+    depends_on:
+      - db
+    working_dir: /var/www/
+    volumes:
+      - ../:/var/www
+      - ./php/conf.d/php.ini:/usr/local/etc/php/php.ini
+      # Use sudo if required.
+      # RUN: mkdir -p /tmp/xdebug
+      # RUN: chmod -R 777 /tmp/xdebug
+      # Log files will be written in this directory
+      - /tmp/xdebug:/tmp/xdebug
+  nginx:
+    image: nginx:1.19-alpine
+    container_name: DOO-nginx
+    restart: always
+    ports:
+      - 8000:80
+    volumes:
+      - ../:/var/www
+      - ./nginx:/etc/nginx/conf.d
+
+volumes:
+  dbdata:
+  my-db:
