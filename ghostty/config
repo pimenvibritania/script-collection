@@ -1,0 +1,4 @@
+theme = /usr/share/ghostty/themes/Dracula+
+shell-integration = zsh
+window-decoration = false
+background-opacity = 0.9

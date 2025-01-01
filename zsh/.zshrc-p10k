@@ -1,0 +1,76 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Use powerline
+
+USE_POWERLINE="true"
+
+# Has weird character width
+
+# Example:
+
+#    is not a diamond
+
+WORDCHARS=${WORDCHARS/[-]/}
+
+HAS_WIDECHARS="false"
+
+# Source manjaro-zsh-configuration
+
+if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
+
+  source /usr/share/zsh/manjaro-zsh-config
+
+fi
+
+# Use manjaro zsh prompt
+
+if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
+
+  source /usr/share/zsh/manjaro-zsh-prompt
+
+fi
+
+source /usr/share/nvm/init-nvm.sh
+
+
+
+export EDITOR="nvim"
+
+export K9S_EDITOR="nvim"
+
+export KUBECONFIG=~/.kube/config
+
+
+
+alias vim="nvim"
+
+alias mctl="minikube kubectl --"
+
+alias k="kubectl"
+
+
+
+# CONTEXT
+
+alias a-plat-stag="kubectl config use-context ack-platform-staging-beta"
+
+alias a-plat-prod="kubectl config use-context ack-platform-production-beta"
+
+alias a-office-stag="kubectl config use-context ack-officeless-staging-alpha"
+
+alias a-office-prod="kubectl config use-context ack-officeless-production-alpha"
+
+alias scvpn="sudo /opt/HillstoneVPN/bin/SCVPN"
+
+
+export PATH=~/.console-ninja/.bin:$PATH
+
+source ~/.aliases.zsh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
